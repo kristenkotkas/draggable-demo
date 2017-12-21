@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
-import Draggable from 'react-draggable'
+import DraggablePoster from "./components/DraggablePoster";
+import {moviesData} from "./static/data"
 
 export default class App extends React.Component {
 
@@ -8,12 +9,12 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       screenWidth: 0,
-      imageXPosition: 0,
       screenHeight: 0
-    }
+    };
+    console.log("Total movies count", moviesData.length);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions.bind(this));
   }
@@ -29,34 +30,30 @@ export default class App extends React.Component {
     });
   }
 
-
-  handleStop(draggableEventHandler) {
-    console.log(
-        draggableEventHandler.clientX,
-        draggableEventHandler.clientY
-    );
-    this.setState({imageXPosition: draggableEventHandler.clientX}, this.handleMovieLike.bind(this));
-  }
-
-  handleMovieLike() {
-    if (this.state.imageXPosition / this.state.screenWidth <= 0.1) {
-      console.log("You don't like this film.");
-    } else if (this.state.imageXPosition / this.state.screenWidth >= 0.9) {
-      console.log("You like this film.")
+  stopHandler(movieData) {
+    if (movieData.imageXPosition / this.state.screenWidth <= 0.1) {
+      console.log("You don't like " + movieData.movieTitle + ".");
+    } else if (movieData.imageXPosition / this.state.screenWidth >= 0.9) {
+      console.log("You like " + movieData.movieTitle + ".")
     }
   }
 
   render() {
     return (
-        <Draggable
-            defaultPosition={{x: 200, y: 200}}
-            bounds="body"
-            onStop={this.handleStop.bind(this)}
-        >
-          <div className="box">
-            <img src="https://image.tmdb.org/t/p/w300/ysX7vDmSh5O19vFjAi56WL7l4nk.jpg" alt=""/>
-          </div>
-        </Draggable>
+        <div>
+          {moviesData.map((movie, key) => {
+            return <DraggablePoster
+                key={key}
+                stopHandler={this.stopHandler.bind(this)}
+                movieTitle={movie.movieTitle}
+                moviePosterPath={movie.moviePosterPath}
+                screenSize={{
+                  screenWidth: this.state.screenWidth,
+                  screenHeight: this.state.screenHeight
+                }}
+            />
+          })}
+        </div>
     );
   }
 }
