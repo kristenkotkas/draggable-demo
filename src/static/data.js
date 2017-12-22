@@ -1,4 +1,4 @@
-export const moviesData = [
+export let moviesData = [
   {
     movieTitle: "Avatar",
     moviePosterPath: "https://image.tmdb.org/t/p/w300/kmcqlZGaSh20zpTbuoF0Cdn07dT.jpg",

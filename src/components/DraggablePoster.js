@@ -12,7 +12,7 @@ export default class DraggablePoster extends React.Component {
       imageYPosition: randomPos.yPos,
       movieTitle: props.movieTitle,
       movieId: props.movieId,
-      moviePosterPath: props.moviePosterPath
+      moviePosterPath: props.moviePosterPath,
     }
   }
 
@@ -34,7 +34,10 @@ export default class DraggablePoster extends React.Component {
   }
 
   handleMovieLike() {
-    this.props.stopHandler(this.state);
+    this.props.stopHandler({
+      state: this.state,
+      data: this.props.data
+    });
   }
 
   render() {
