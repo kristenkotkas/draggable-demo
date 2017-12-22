@@ -13,6 +13,10 @@ export default class DraggablePoster extends React.Component {
       movieTitle: props.movieTitle,
       movieId: props.movieId,
       moviePosterPath: props.moviePosterPath,
+      posterStyle: {
+        position: "absolute",
+        zIndex: this.props.position
+      }
     }
   }
 
@@ -30,7 +34,16 @@ export default class DraggablePoster extends React.Component {
         draggableEventHandler.clientX,
         draggableEventHandler.clientY
     );
-    this.setState({imageXPosition: draggableEventHandler.clientX}, this.handleMovieLike.bind(this));
+    this.setState({
+      imageXPosition: draggableEventHandler.clientX,
+      posterStyle: {...this.state.posterStyle, zIndex: this.props.position}
+    }, this.handleMovieLike.bind(this));
+  }
+
+  handleStart(draggableEventHandler) {
+    this.setState({
+      posterStyle: {...this.state.posterStyle, zIndex: 999}
+    });
   }
 
   handleMovieLike() {
@@ -46,8 +59,10 @@ export default class DraggablePoster extends React.Component {
             defaultPosition={{x: this.state.imageXPosition, y: this.state.imageYPosition}}
             bounds="body"
             onStop={this.handleStop.bind(this)}
+            onStart={this.handleStart.bind(this)}
         >
-          <div className="box" style={{position: "absolute"}}>
+          <div
+              style={this.state.posterStyle} className="box">
             <img src={this.state.moviePosterPath} alt=""/>
           </div>
         </Draggable>

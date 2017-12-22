@@ -88,7 +88,7 @@ export default class App extends React.Component {
             removeMovie={this.removeMovieFromSide.bind(this)}
           />
         })}
-        {this.state.moviesData.map((movie) => {
+        {this.state.moviesData.map((movie, key) => {
           return <DraggablePoster
             key={movie.movieTitle}
             stopHandler={this.stopHandler.bind(this)}
@@ -99,6 +99,7 @@ export default class App extends React.Component {
               screenHeight: this.state.screenHeight
             }}
             data={movie}
+            position={key}
           />
         })}
         {this.state.likedMovies.map((movie, key) => {
