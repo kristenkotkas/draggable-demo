@@ -36,11 +36,15 @@ export default class App extends React.Component {
 
   stopHandler(movieData) {
     if (movieData.state.imageXPosition / this.state.screenWidth <= 0.1) {
-      console.log("You don't like " + movieData.data.movieTitle + ".");
-      this.addToDislikes(movieData.data);
+      if (this.state.dislikedMovies.length < 6) {
+        console.log("You don't like " + movieData.data.movieTitle + ".");
+        this.addToDislikes(movieData.data);
+      }
     } else if (movieData.state.imageXPosition / this.state.screenWidth >= 0.9) {
-      console.log("You like " + movieData.data.movieTitle + ".");
-      this.addToLikes(movieData.data);
+      if (this.state.likedMovies.length < 6) {
+        console.log("You like " + movieData.data.movieTitle + ".");
+        this.addToLikes(movieData.data);
+      }
     }
   }
 
@@ -48,7 +52,6 @@ export default class App extends React.Component {
     this.setState({
       likedMovies: [...this.state.likedMovies, movieData]
     }, this.removeFromMovies(movieData));
-
   }
 
   addToDislikes(movieData) {
@@ -59,8 +62,16 @@ export default class App extends React.Component {
 
   removeFromMovies(movieData) {
     this.setState({
-      moviesData: this.state.moviesData.filter(movie => movie.movieTitle !== movieData.movieTitle)
+      moviesData: this.state.moviesData.filter(movie => movie.movieId !== movieData.movieId)
     })
+  }
+
+  removeMovieFromSide(movieData) {
+    this.setState({
+      likedMovies: this.state.likedMovies.filter(movie => movie.movieId !== movieData.movieId),
+      dislikedMovies: this.state.dislikedMovies.filter(movie => movie.movieId !== movieData.movieId),
+      moviesData: [...this.state.moviesData, movieData]
+    });
   }
 
   render() {
@@ -71,8 +82,10 @@ export default class App extends React.Component {
             key={movie.movieTitle}
             movieTitle={movie.movieTitle}
             moviePosterPath={movie.moviePosterPath}
+            movieId={movie.movieId}
             xPos={0.01 * this.state.screenWidth}
             yPos={key * 110}
+            removeMovie={this.removeMovieFromSide.bind(this)}
           />
         })}
         {this.state.moviesData.map((movie) => {
@@ -93,8 +106,10 @@ export default class App extends React.Component {
             key={movie.movieTitle}
             movieTitle={movie.movieTitle}
             moviePosterPath={movie.moviePosterPath}
+            movieId={movie.movieId}
             xPos={0.91 * this.state.screenWidth}
             yPos={key * 110}
+            removeMovie={this.removeMovieFromSide.bind(this)}
           />
         })}
       </div>

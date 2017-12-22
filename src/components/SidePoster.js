@@ -1,5 +1,6 @@
 import React from 'react';
 import '../App.css';
+import FontAwesome from 'react-fontawesome';
 
 export default class SidePoster extends React.Component {
 
@@ -12,13 +13,22 @@ export default class SidePoster extends React.Component {
     }
   }
 
+  removeMovie() {
+    this.props.removeMovie(this.state);
+  }
+
   render() {
     return (
       <div className="box" style={{
         position: "absolute",
         transform: "translate(" + this.props.xPos + "px, " + this.props.yPos + "px)"
       }}>
-        <img src={this.state.moviePosterPath} alt=""/>
+        <FontAwesome
+            className={'removeMovie'}
+            name={'times'}
+            onClick={this.removeMovie.bind(this)}
+        />
+        <img src={this.state.moviePosterPath} className={'sidePosterImg'} alt=""/>
       </div>
     );
   }
